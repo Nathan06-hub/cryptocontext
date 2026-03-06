@@ -1,0 +1,13 @@
+# Crypto Context Bot v3.0
+
+# Discord
+discord.py>=2.3.0
+
+# HTTP async (remplace requests)
+aiohttp>=3.9.0
+
+# Variables d'environnement
+python-dotenv>=1.0.0
+
+# Graphiques (/chart)
+matplotlib>=3.7.0

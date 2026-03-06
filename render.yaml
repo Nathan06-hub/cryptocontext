@@ -1,0 +1,70 @@
+# ============================================================
+# Render.com — Configuration de déploiement
+# Crypto Context Bot v4.0
+#
+# 2 services :
+#   1. crypto-webhook  (web)    → reçoit les webhooks Paddle
+#   2. crypto-bot      (worker) → bot Discord
+#
+# IMPORTANT : configurez les variables d'environnement
+# dans le dashboard Render pour chaque service.
+# ============================================================
+
+services:
+
+  # ── Serveur Webhook Paddle (Web Service) ─────────────────
+  - type: web
+    name: crypto-webhook
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python paddle_webhook.py
+    healthCheckPath: /health
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false           # à renseigner dans le dashboard Render
+      - key: PADDLE_WEBHOOK_SECRET
+        sync: false
+      - key: PADDLE_PRICE_BASIC
+        sync: false
+      - key: PADDLE_PRICE_PRO
+        sync: false
+      - key: PADDLE_PRICE_PREMIUM
+        sync: false
+      - key: PADDLE_CUSTOMER_PORTAL
+        value: https://customer.paddle.com
+      - key: ENVIRONMENT
+        value: production
+
+  # ── Bot Discord (Background Worker) ──────────────────────
+  - type: worker
+    name: crypto-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_discord.py
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false           # à renseigner dans le dashboard Render
+      - key: PADDLE_STORE_URL
+        value: https://buy.paddle.com
+      - key: PADDLE_LINK_BASIC
+        sync: false
+      - key: PADDLE_LINK_PRO
+        sync: false
+      - key: PADDLE_LINK_PREMIUM
+        sync: false
+      - key: PADDLE_CUSTOMER_PORTAL
+        value: https://customer.paddle.com
+      - key: ADMIN_DISCORD_ID
+        sync: false
+      - key: FEEDBACK_CHANNEL_ID
+        sync: false
+      - key: MANUAL_MODE
+        value: "true"
+      - key: CONTACT_DISCORD
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ENVIRONMENT
+        value: production
